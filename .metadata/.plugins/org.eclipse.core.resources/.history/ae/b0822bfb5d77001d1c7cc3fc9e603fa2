@@ -22,7 +22,7 @@ public class Controller {
         for(int i = 0; i < noOfUrls; i++) {
             String url = urls.get(i);
             String[] data = url.split(" ");
-            String jsonData = crawlerService.getJsonDataFromUrl(data[0], data[1], data[2]);
+            String jsonData = crawlerService.getJsonDataFromUrl(data[0], data[1], data[2], data[3]);
             if(i > 0) output += ",";
             output += "\n" + jsonData;
         }

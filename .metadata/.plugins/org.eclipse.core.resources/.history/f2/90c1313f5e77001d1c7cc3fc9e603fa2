@@ -61,8 +61,10 @@ public final class FileMangerService {
         try {
             arr = (JSONArray) parser.parse(new FileReader(sourceFile));
         } catch (IOException ex) {
+            System.out.println(ex);
 //            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
+            System.out.println(ex);
 //            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 

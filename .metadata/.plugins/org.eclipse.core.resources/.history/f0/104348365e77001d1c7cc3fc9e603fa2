@@ -47,6 +47,7 @@ public class CrawlerService {
 				}
 			
 			}
+			//}
 		}
 
 		String content = "{";

@@ -15,7 +15,7 @@ import org.prime.Utility;
 
 public class CrawlerService {
 
-	public String getJsonDataFromUrl(String url, String cantor, String musica) {
+	public String getJsonDataFromUrl(String url, String cantor, String musica, String posicao) {
 		String ret = "";
 		Document doc = null;
 
@@ -32,6 +32,8 @@ public class CrawlerService {
 
 		for (Element element : elements) {
 		String[] verify = elements2.get(elements.indexOf(element)).ownText().split(" ");
+		System.out.println(verify[0] + "  " + verify[0].matches("/^\\d+$/"));
+			//if(verify[0].matches("[0-9]")) {
 			String tagName = Utility.getRidOfSpecialChar(elements2.get(elements.indexOf(element)).ownText().trim());
 			if (Utility.isValidTag(tagName)) {
 				String textValue = Utility.removeNonPrintableChars(element.ownText()).trim();
@@ -47,6 +49,7 @@ public class CrawlerService {
 				}
 			
 			}
+			//}
 		}
 
 		String content = "{";
