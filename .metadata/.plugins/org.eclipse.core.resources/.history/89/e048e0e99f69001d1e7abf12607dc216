@@ -1,0 +1,92 @@
+package org.prime.Services;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.prime.Utility;
+
+public class CrawlerService {
+
+	public String getJsonDataFromUrl(String url, String cantor, String musica, String posicao) {
+		String ret = "";
+		Document doc = null;
+
+		try {
+			doc = Jsoup.connect(url).get();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		Elements elements = doc.body().getElementsByClass(musica);
+		Elements elements2 = doc.body().getElementsByClass(cantor);
+		Elements elements3 = doc.body().getElementsByClass(posicao);
+
+		HashMap<String, ArrayList<String>> tag_text = new HashMap<String, ArrayList<String>>();
+
+		for (Element element : elements) {
+		String[] verify = elements2.get(elements.indexOf(element)).ownText().split(" ");
+		System.out.println(verify[0] + "  " + verify[0].matches("[]0-9"));
+			//if(verify[0].matches("[0-9]")) {
+			String tagName = Utility.getRidOfSpecialChar(elements2.get(elements.indexOf(element)).ownText().trim());
+			if (Utility.isValidTag(tagName)) {
+				String textValue = Utility.removeNonPrintableChars(element.ownText()).trim()  + " posicao: ";
+				textValue = Utility.getRidOfSpecialChar(textValue);
+				if (!textValue.equals("")) {
+					if (tag_text.containsKey(tagName)) {
+						tag_text.get(tagName).add(textValue);
+					} else {
+						ArrayList<String> arr = new ArrayList<String>();
+						arr.add(textValue);
+						tag_text.put(tagName, arr);
+					}
+				}
+			
+			}
+			//}
+		}
+
+		String content = "{";
+
+		Set<?> set = tag_text.entrySet();
+		Iterator<?> i = set.iterator();
+
+		while (i.hasNext()) {
+			@SuppressWarnings("rawtypes")
+			Map.Entry me = (Map.Entry) i.next();
+			if (content != "{")
+				content += ",\n";
+			content += "\"" + me.getKey() + "\": "; // + me.getValue();
+
+			@SuppressWarnings("unchecked")
+			ArrayList<String> arr = (ArrayList<String>) me.getValue();
+			content += "[";
+			for (String str : arr) {
+				content += "\"" + str + "\",";
+			}
+			content = content.substring(0, content.length() - 1);
+			content += "]";
+		}
+
+		content += "\n}";
+
+//        content = removeSpecialCharacters(content);
+		content = Utility.removeNonPrintableChars(content);
+		content = Utility.removeSpaces(content);
+
+		String titleName = Utility.getRidOfSpecialChar(doc.title());
+		ret += "{ \"url\" : \"" + url + "\",\n";
+		ret += " \"title\" : \"" + titleName + "\",\n";
+		ret += "\"content\" : " + content;
+		ret += "\n}";
+		ret = ret.trim();
+		return ret;
+	}
+}

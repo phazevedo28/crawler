@@ -1,0 +1,7 @@
+INDEX VERSION 1.131+/home/phazevedo28/Documentos/projetos/crawler-jsoup/.metadata/.plugins/org.eclipse.jdt.core
+1805036115.index
+3249188588.index
+1880806931.index
+1370322211.index
+2901804620.index
+1059611418.index
